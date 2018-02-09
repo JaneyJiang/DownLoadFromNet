@@ -50,27 +50,30 @@ class GetPaper:
     def processNaviUrls(self):
         for index,url in enumerate(self.naviurls):
             print(url)
+            name = url.split('/')[-1][:-5]
+            print(name)
            # if index b
             bsObj = getbsObj(url)
             #if index <=14:
             #    pdfurl,filename = self.processVolumeafter3(bsObj)
             #else:
-            self.processVolume(bsObj)
+            self.processTopic(bsObj, name)
+            #self.processVolume(bsObj)
             #self.processVolumeafter3(bsObj)
             
                     
-    def processVolumeafter3(self,bsObj):#原来用来处理volumn4，,5.等大于volumn3的数据，这里已经不需要了，可以改写成为适用于special topic的paper下载
-        content = bsObj.find('div',{'id':'content'}).findAll('dl')
+    def processTopic(self,bsObj, name):#原来用来处理volumn4，,5.等大于volumn3的数据，这里已经不需要了，可以改写成为适用于special topic的paper下载
+        content = bsObj.findAll('a',{'href':re.compile(r'.*volume\d+.*pdf$')})
         pdfurl = ''
-        filename =''
-        for i,dl in enumerate(content):
+        for _,a in enumerate(content):
             #title_name = p.dt.get_text()
-            dl = dl.dt.dd#之所以下降范围是因为如果不这么做会有干扰url出现
-            suburl = dl.find('a',{'target':'_blank'}).get('href')
+            suburl = a.get('href')
             #print(suburl)
             pdfurl = urljoin(self.baseurl,suburl)
             #pathlist = suburl.split('/')[-4:-1]+title_name+'.pdf'
-            filename = self.fold +'/'+ '/'.join(suburl.split('/')[-4:])
+            pathlist = suburl.split('/')[-4:-2]+suburl.split('/')[-1:]
+            filename = self.fold +'/'+ name+'/'+'/'.join(pathlist)
+            print(filename,pdfurl)
             saveFile(filename, pdfurl) 
 
 
@@ -99,8 +102,8 @@ def saveFile(filename, source):
     if not os.path.exists(directory):
         os.makedirs(directory)
         #print(directory)
-        print(filename, source)
-        urlretrieve(source, filename)
+    print(filename, source)
+    urlretrieve(source, filename)
 
         
 if __name__ == '__main__':
