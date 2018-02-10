@@ -73,7 +73,8 @@ class GetPaper:
             #pathlist = suburl.split('/')[-4:-1]+title_name+'.pdf'
             pathlist = suburl.split('/')[-4:-2]+suburl.split('/')[-1:]
             filename = self.fold +'/'+ name+'/'+'/'.join(pathlist)
-            print(filename,pdfurl)
+            print(suburl)
+           # print(filename,pdfurl)
             saveFile(filename, pdfurl) 
 
 
@@ -86,6 +87,7 @@ class GetPaper:
             pdfurl = urljoin(self.baseurl,suburl)
             #pathlist = suburl.split('/')[-4:-1]+title_name+'.pdf'
             filename = self.fold +'/'+ '/'.join(suburl.split('/')[-4:])
+            print(suburl)
             print(filename, pdfurl)
             saveFile(filename, pdfurl)        
 
@@ -101,9 +103,14 @@ def saveFile(filename, source):
     #print(directory)
     if not os.path.exists(directory):
         os.makedirs(directory)
-        #print(directory)
-    print(filename, source)
-    urlretrieve(source, filename)
+    #print(directory)
+    if not os.path.exists(filename):
+        print(filename, source)
+        try:
+            urlretrieve(source, filename)
+        except:
+            print(source,"error")
+            
 
         
 if __name__ == '__main__':
