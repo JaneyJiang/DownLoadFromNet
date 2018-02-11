@@ -79,6 +79,7 @@ class GetPaper:
 
 
     def processVolume(self,bsObj):#处理volume的下载
+        #寻找所在的a，因为寻找p的话，在有些页面上无法获得完整的（会出现获得不到a的情况）大概是volume3一下的网页
         content = bsObj.findAll('a',{'href':re.compile(r'.*volume\d+.*pdf$')})
         pdfurl = ''
         filename =''
